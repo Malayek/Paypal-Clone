@@ -2,249 +2,604 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>BluePay Wallet - Send & Receive Money</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxPay - Secure Digital Wallet & Payments</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #gold 100%); 
-            color: #333; 
-            min-height: 100vh; 
-            overflow-x: hidden;
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f3f6fb;
+            color:#1f2933;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        header { background: rgba(255,215,0,0.1); backdrop-filter: blur(10px); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
-        nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 2rem; font-weight: bold; background: linear-gradient(45deg, #gold, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-links a { color: white; margin: 0 1rem; text-decoration: none; }
-        .hero { text-align: center; padding: 4rem 0; color: white; }
-        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; }
-        .hero p { font-size: 1.2rem; margin-bottom: 2rem; }
-        .btn { background: linear-gradient(45deg, #gold, #ffd700); color: #1e3c72; padding: 12px 30px; border: none; border-radius: 50px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(255,215,0,0.4); }
-        .auth-form, .dashboard { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 20px; padding: 2rem; margin: 2rem auto; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: #1e3c72; }
-        .form-group input { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; transition: border 0.3s; }
-        .form-group input:focus { outline: none; border-color: #gold; }
-        .balance { font-size: 2.5rem; text-align: center; color: #gold; margin: 1rem 0; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
-        .card { background: rgba(255,255,255,0.9); border-radius: 15px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .card h3 { color: #1e3c72; margin-bottom: 1rem; }
-        .transactions { max-height: 300px; overflow-y: auto; }
-        .transaction { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid #eee; }
-        .send-form input { width: 70%; margin-right: 1rem; }
-        .send-form button { width: 25%; }
-        .hidden { display: none; }
-        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .grid { grid-template-columns: 1fr; } nav { flex-direction: column; gap: 1rem; } }
-        .lux-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.1; }
-        .notification { position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 1rem; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transform: translateX(400px); transition: transform 0.3s; z-index: 1000; }
-        .notification.show { transform: translateX(0); }
+        a { text-decoration:none; color:inherit; }
+
+        header {
+            background:#0b5ed7;
+            color:#fff;
+            padding:14px 24px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            position:sticky;
+            top:0;
+            z-index:50;
+        }
+        .logo {
+            font-weight:700;
+            font-size:1.5rem;
+            letter-spacing:0.04em;
+        }
+        .nav-right {
+            display:flex;
+            align-items:center;
+            gap:16px;
+            font-size:0.95rem;
+        }
+        .nav-pill {
+            background:#ffffff22;
+            padding:6px 14px;
+            border-radius:999px;
+        }
+
+        .hero {
+            display:flex;
+            flex-wrap:wrap;
+            align-items:center;
+            justify-content:center;
+            gap:28px;
+            padding:32px 24px 10px;
+            background:linear-gradient(135deg,#0b5ed7 0%,#1450a3 35%,#ffffff 36%,#f3f6fb 100%);
+        }
+        .hero-text {
+            flex:1 1 280px;
+            color:#fff;
+            max-width:480px;
+        }
+        .hero-text h1 {
+            font-size:2.4rem;
+            margin-bottom:12px;
+        }
+        .hero-text p {
+            font-size:1rem;
+            opacity:0.9;
+            margin-bottom:16px;
+        }
+        .hero-text .pill {
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            background:#ffffff22;
+            border-radius:999px;
+            padding:6px 12px;
+            font-size:0.8rem;
+            margin-bottom:10px;
+        }
+        .hero-btn {
+            background:#fff;
+            color:#0b5ed7;
+            padding:9px 18px;
+            border-radius:999px;
+            border:none;
+            cursor:pointer;
+            font-weight:600;
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.14);
+        }
+        .hero-btn:hover { transform:translateY(-1px); }
+
+        .hero-image {
+            flex:1 1 260px;
+            max-width:480px;
+            border-radius:22px;
+            overflow:hidden;
+            box-shadow:0 18px 45px rgba(15,23,42,0.35);
+            border:5px solid #ffffff;
+        }
+        .hero-image img {
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            display:block;
+        }
+
+        .main-wrap {
+            max-width:1100px;
+            margin:0 auto;
+            padding:20px 16px 40px;
+        }
+
+        .top-row {
+            display:flex;
+            flex-wrap:wrap;
+            gap:18px;
+            align-items:stretch;
+        }
+        .card {
+            background:#fff;
+            border-radius:18px;
+            padding:18px 18px 16px;
+            box-shadow:0 10px 30px rgba(15,23,42,0.08);
+        }
+        .balance-card {
+            flex:2 1 260px;
+            position:relative;
+            overflow:hidden;
+            background:linear-gradient(145deg,#0b5ed7 0%,#2563eb 45%,#ffffff 46%,#e5edff 100%);
+            color:#fff;
+        }
+        .balance-header {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:12px;
+        }
+        .balance-amount {
+            font-size:2.1rem;
+            font-weight:600;
+        }
+        .balance-sub {
+            font-size:0.85rem;
+            opacity:0.9;
+        }
+        .balance-tag {
+            font-size:0.8rem;
+            background:#ffffff22;
+            padding:4px 10px;
+            border-radius:999px;
+        }
+
+        .quick-row {
+            display:flex;
+            gap:10px;
+            margin-top:12px;
+            flex-wrap:wrap;
+        }
+        .quick-pill {
+            flex:1 1 110px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:7px 0;
+            border-radius:999px;
+            background:#ffffffdd;
+            color:#0b5ed7;
+            font-size:0.9rem;
+            cursor:pointer;
+        }
+        .quick-pill i { font-size:0.9rem; }
+
+        .side-summary {
+            flex:1 1 220px;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+        }
+        .side-row {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            font-size:0.9rem;
+        }
+        .side-label { color:#6b7280; }
+        .side-value { font-weight:600; }
+
+        .section-title {
+            margin:20px 0 10px;
+            font-size:1.05rem;
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+
+        .grid-two {
+            display:grid;
+            grid-template-columns:minmax(0, 1.1fr) minmax(0, 1.1fr);
+            gap:18px;
+        }
+
+        .form-group {
+            margin-bottom:12px;
+        }
+        label {
+            display:block;
+            font-size:0.85rem;
+            margin-bottom:4px;
+            color:#475569;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width:100%;
+            padding:9px 10px;
+            border-radius:10px;
+            border:1px solid #d0d7e2;
+            font-size:0.92rem;
+            outline:none;
+        }
+        input:focus {
+            border-color:#0b5ed7;
+            box-shadow:0 0 0 1px #bfdbfe;
+        }
+        .btn-primary {
+            width:100%;
+            padding:10px;
+            border-radius:999px;
+            border:none;
+            cursor:pointer;
+            background:#0b5ed7;
+            color:#fff;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+        }
+        .btn-primary:hover { background:#0a53be; }
+
+        .tx-list {
+            max-height:270px;
+            overflow-y:auto;
+        }
+        .tx-row {
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            padding:8px 0;
+            border-bottom:1px solid #edf1f9;
+            font-size:0.85rem;
+        }
+        .tx-main {
+            display:flex;
+            flex-direction:column;
+            gap:3px;
+        }
+        .tx-who {
+            font-weight:600;
+        }
+        .tx-type {
+            font-size:0.78rem;
+            text-transform:uppercase;
+            letter-spacing:0.05em;
+            color:#6b7280;
+        }
+        .tx-right {
+            text-align:right;
+        }
+        .tx-amount-pos { color:#059669; font-weight:600; }
+        .tx-amount-neg { color:#dc2626; font-weight:600; }
+        .tx-date { font-size:0.78rem; color:#9ca3af; }
+
+        .notification {
+            position:fixed;
+            right:18px;
+            bottom:18px;
+            max-width:320px;
+            background:#0b5ed7;
+            color:#fff;
+            padding:10px 14px;
+            font-size:0.86rem;
+            border-radius:12px;
+            box-shadow:0 16px 35px rgba(15,23,42,0.38);
+            opacity:0;
+            transform:translateY(18px);
+            pointer-events:none;
+            transition:opacity 0.22s ease, transform 0.22s ease;
+            z-index:100;
+        }
+        .notification.show {
+            opacity:1;
+            transform:translateY(0);
+            pointer-events:auto;
+        }
+        .notification-title { font-weight:600; margin-bottom:3px; }
+
+        @media (max-width:768px) {
+            header { padding:10px 14px; }
+            .hero { padding:18px 14px 10px; }
+            .hero-text h1 { font-size:1.9rem; }
+            .grid-two { grid-template-columns:1fr; }
+        }
     </style>
 </head>
 <body>
-    <div class="lux-bg"><i class="fas fa-coins" style="font-size: 200px; position: absolute; top: 20%; left: 10%; color: gold;"></i><i class="fas fa-wallet" style="font-size: 150px; position: absolute; bottom: 20%; right: 10%; color: #ffd700;"></i></div>
-    
-    <header>
-        <nav class="container">
-            <div class="logo">LuxPay</div>
-            <div class="nav-links">
-                <a href="#" onclick="showHome()">Home</a>
-                <a href="#" onclick="showLogin()" id="loginLink" style="display:none;">Login</a>
-                <a href="#" onclick="showSignup()" id="signupLink" style="display:none;">Sign Up</a>
-                <a href="#" onclick="logout()" id="logoutLink">Logout</a>
-            </div>
-        </nav>
-    </header>
 
-    <section id="home" class="hero">
-        <div class="container">
-            <h1>Send & Receive Money Securely</h1>
-            <p>Digital wallet with instant transfers, balance management, and full transaction history. Luxury secure payments for everyone.</p>
-            <button class="btn" onclick="showSignup()">Get Started Free</button>
+<header>
+    <div class="logo"><i class="fa-solid fa-circle-dollar-to-slot"></i> BluePay</div>
+    <div class="nav-right">
+        <span class="nav-pill"><i class="fa-solid fa-shield-halved"></i> Protected balance</span>
+        <span><i class="fa-regular fa-user"></i> Hello, Alida</span>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-text">
+        <div class="pill">
+            <i class="fa-solid fa-bolt"></i> Instant transfers • Blue & white clean UI
         </div>
-    </section>
+        <h1>Your money, one simple screen.</h1>
+        <p>Check your balance, see every transaction, and send money by just typing a name. Everything
+           updates instantly, like a real payment app.</p>
+        <button class="hero-btn" onclick="scrollToMain()">
+            <i class="fa-solid fa-wallet"></i>
+            Open my wallet
+        </button>
+    </div>
+    <div class="hero-image">
+        <!-- Real-life payment image (royalty-free URL) -->
+        <img src="https://images.pexels.com/photos/4968391/pexels-photo-4968391.jpeg?auto=compress&cs=tinysrgb&w=1200"
+             alt="Person paying with a phone in a store">
+    </div>
+</section>
 
-    <section id="auth" class="hidden">
-        <form class="auth-form container" id="signupForm">
-            <h2>Create LuxPay Account</h2>
-            <div class="form-group"><label>Email</label><input type="email" id="signupEmail" required></div>
-            <div class="form-group"><label>Password</label><input type="password" id="signupPass" required></div>
-            <button type="submit" class="btn" style="width:100%;">Sign Up</button>
-            <p style="text-align:center; margin-top:1rem;">Already have account? <a href="#" onclick="showLogin()">Login</a></p>
-        </form>
-
-        <form class="auth-form container hidden" id="loginForm">
-            <h2>Login to LuxPay</h2>
-            <div class="form-group"><label>Email</label><input type="email" id="loginEmail" required></div>
-            <div class="form-group"><label>Password</label><input type="password" id="loginPass" required></div>
-            <button type="submit" class="btn" style="width:100%;">Login</button>
-            <p style="text-align:center; margin-top:1rem;">New? <a href="#" onclick="showSignup()">Sign Up</a></p>
-        </form>
-    </section>
-
-    <section id="dashboard" class="container hidden">
-        <div class="balance" id="balance">$0.00</div>
-        <div class="grid">
-            <div class="card">
-                <h3><i class="fas fa-plus-circle"></i> Add Funds</h3>
-                <input type="number" id="addAmount" placeholder="Enter amount" min="1">
-                <button class="btn" onclick="addFunds()" style="width:100%; margin-top:1rem;">Add to Wallet (Mock Card)</button>
-            </div>
-            <div class="card">
-                <h3><i class="fas fa-paper-plane"></i> Send Money</h3>
-                <div class="send-form">
-                    <input type="text" id="recipientEmail" placeholder="Recipient email/username">
-                    <input type="number" id="sendAmount" placeholder="Amount" min="0.01" step="0.01">
+<main class="main-wrap" id="mainWallet">
+    <div class="top-row">
+        <div class="card balance-card">
+            <div class="balance-header">
+                <div>
+                    <div class="balance-sub">Current balance</div>
+                    <div id="balanceAmount" class="balance-amount">£0.00</div>
                 </div>
-                <button class="btn" onclick="sendMoney()" style="width:100%; margin-top:1rem;">Send</button>
+                <div class="balance-tag">
+                    <i class="fa-solid fa-circle-check"></i> Verified account
+                </div>
+            </div>
+            <div class="quick-row">
+                <button class="quick-pill" onclick="focusSendName()">
+                    <i class="fa-solid fa-paper-plane"></i> Send money
+                </button>
+                <button class="quick-pill" onclick="addMockFunds(100)">
+                    <i class="fa-solid fa-plus-circle"></i> +£100 test
+                </button>
+                <button class="quick-pill" onclick="addMockFunds(500)">
+                    <i class="fa-solid fa-plus-circle"></i> +£500 test
+                </button>
             </div>
         </div>
-        <div class="card" style="margin-top:2rem;">
-            <h3><i class="fas fa-history"></i> Transaction History</h3>
-            <div class="transactions" id="transactions"></div>
+
+        <div class="card side-summary">
+            <div class="side-row">
+                <span class="side-label">Today’s sent</span>
+                <span class="side-value" id="todaySent">£0.00</span>
+            </div>
+            <div class="side-row">
+                <span class="side-label">Today’s received</span>
+                <span class="side-value" id="todayReceived">£0.00</span>
+            </div>
+            <div class="side-row">
+                <span class="side-label">Total transactions</span>
+                <span class="side-value" id="totalCount">0</span>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <div id="notification" class="notification"></div>
+    <h2 class="section-title">
+        <i class="fa-solid fa-money-bill-transfer" style="color:#0b5ed7;"></i>
+        Main actions & history
+    </h2>
 
-    <script>
-        // Data storage (mock encrypted with simple base64 for demo)
-        function encrypt(str) { return btoa(str); }
-        function decrypt(enc) { return atob(enc); }
-        let currentUser = localStorage.getItem('currentUser') || null;
-        let users = JSON.parse(localStorage.getItem('users')) || {};
-        let transactions = JSON.parse(localStorage.getItem('transactions')) || {};
+    <div class="grid-two">
+        <!-- SEND MONEY FORM -->
+        <div class="card">
+            <h3 style="margin-bottom:10px;">Send money</h3>
+            <div class="form-group">
+                <label for="recipientName">Recipient name (no account needed)</label>
+                <input type="text" id="recipientName" placeholder="e.g. Alida, Humuhumu, Mom" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="sendAmount">Amount to send (£)</label>
+                <input type="number" id="sendAmount" min="0.01" step="0.01" placeholder="e.g. 50">
+            </div>
+            <div class="form-group">
+                <label for="note">Note (optional)</label>
+                <input type="text" id="note" placeholder="e.g. Pocket money, rent, gift…">
+            </div>
+            <button class="btn-primary" onclick="sendMoney()">
+                <i class="fa-solid fa-paper-plane"></i> Send now
+            </button>
+        </div>
 
-        // Init
-        if (currentUser) {
-            showDashboard();
+        <!-- TRANSACTION HISTORY -->
+        <div class="card">
+            <h3 style="margin-bottom:10px;">Main transactions</h3>
+            <div class="tx-list" id="txList">
+                <!-- Transactions injected with JS -->
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="notification" id="notify">
+    <div class="notification-title" id="notifyTitle"></div>
+    <div id="notifyBody"></div>
+</div>
+
+<script>
+    // --- SIMPLE WALLET STATE USING LOCALSTORAGE ---
+    const STORAGE_KEY = "bluepay_wallet_v1";
+
+    const initialState = {
+        balance: 5000,   // starting from £5000 as you requested
+        transactions: [] // each tx: {id, type, name, amount, note, createdAt}
+    };
+
+    function loadState() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(initialState));
+            return structuredClone(initialState);
+        }
+        try {
+            return JSON.parse(raw);
+        } catch (e) {
+            return structuredClone(initialState);
+        }
+    }
+
+    function saveState(state) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    let wallet = loadState();
+    renderAll();
+
+    function formatMoney(v) {
+        return "£" + Number(v).toFixed(2);
+    }
+
+    function renderAll() {
+        document.getElementById("balanceAmount").textContent = formatMoney(wallet.balance);
+
+        const today = new Date().toISOString().slice(0,10);
+        let sentToday = 0, receivedToday = 0;
+
+        const list = document.getElementById("txList");
+        if (!wallet.transactions.length) {
+            list.innerHTML = '<p style="font-size:0.85rem;color:#6b7280;">No transactions yet. Send some money to see your history here.</p>';
         } else {
-            showHome();
+            const rows = wallet.transactions
+                .slice()
+                .sort((a,b) => b.createdAt - a.createdAt)
+                .map(tx => {
+                    const d = new Date(tx.createdAt);
+                    const isToday = d.toISOString().slice(0,10) === today;
+                    if (isToday && tx.type === "sent") sentToday += tx.amount;
+                    if (isToday && tx.type === "received") receivedToday += tx.amount;
+
+                    return `
+                    <div class="tx-row">
+                        <div class="tx-main">
+                            <span class="tx-who">${tx.type === "sent" ? "To " : "From "}${tx.name}</span>
+                            <span class="tx-type">${tx.type.toUpperCase()}</span>
+                            ${tx.note ? `<span style="font-size:0.8rem;color:#6b7280;">${tx.note}</span>` : ""}
+                        </div>
+                        <div class="tx-right">
+                            <div class="${tx.type === "sent" ? "tx-amount-neg" : "tx-amount-pos"}">
+                                ${tx.type === "sent" ? "-" : "+"}${formatMoney(tx.amount)}
+                            </div>
+                            <div class="tx-date">${d.toLocaleString()}</div>
+                        </div>
+                    </div>`;
+                }).join("");
+            list.innerHTML = rows;
         }
 
-        // UI Functions
-        function showHome() {
-            document.getElementById('home').classList.remove('hidden');
-            document.getElementById('auth').classList.add('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById("todaySent").textContent = formatMoney(sentToday);
+        document.getElementById("todayReceived").textContent = formatMoney(receivedToday);
+        document.getElementById("totalCount").textContent = wallet.transactions.length;
+    }
+
+    // --- ACTIONS ---
+
+    function addMockFunds(amount) {
+        wallet.balance += amount;
+        const tx = {
+            id: crypto.randomUUID(),
+            type: "received",
+            name: "Test top up",
+            amount,
+            note: "Mock card top-up",
+            createdAt: Date.now()
+        };
+        wallet.transactions.push(tx);
+        saveState(wallet);
+        renderAll();
+        showNotification("Balance topped up", `+${formatMoney(amount)} added to your real BluePay wallet (test).`);
+    }
+
+    function sendMoney() {
+        const nameInput = document.getElementById("recipientName");
+        const amountInput = document.getElementById("sendAmount");
+        const noteInput = document.getElementById("note");
+
+        const name = nameInput.value.trim();
+        const amount = parseFloat(amountInput.value);
+        const note = noteInput.value.trim();
+
+        if (!name) {
+            showNotification("Missing name", "Please type the recipient’s name (it does not need an account).");
+            nameInput.focus();
+            return;
         }
-        function showSignup() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('signupForm').classList.remove('hidden');
-            document.getElementById('auth').classList.remove('hidden');
-            document.getElementById('home').classList.add('hidden');
+        if (!amount || amount <= 0) {
+            showNotification("Invalid amount", "Enter an amount greater than 0.");
+            amountInput.focus();
+            return;
         }
-        function showLogin() {
-            document.getElementById('signupForm').classList.add('hidden');
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('auth').classList.remove('hidden');
-            document.getElementById('home').classList.add('hidden');
-        }
-        function showDashboard() {
-            document.getElementById('auth').classList.add('hidden');
-            document.getElementById('home').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('loginLink').style.display = 'none';
-            document.getElementById('signupLink').style.display = 'none';
-            document.getElementById('logoutLink').style.display = 'inline';
-            renderDashboard();
+        if (amount > wallet.balance) {
+            showNotification("Insufficient balance", `You tried to send ${formatMoney(amount)} but you only have ${formatMoney(wallet.balance)}.`);
+            return;
         }
 
-        // Auth
-        document.getElementById('signupForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('signupEmail').value;
-            const pass = encrypt(document.getElementById('signupPass').value);
-            if (users[email]) return showNotification('Email already exists!');
-            users[email] = { balance: 0, pass };
-            localStorage.setItem('users', JSON.stringify(users));
-            currentUser = email;
-            localStorage.setItem('currentUser', email);
-            showNotification('Account created! Welcome to LuxPay.');
-            showDashboard();
-        });
+        // update balance
+        const oldBalance = wallet.balance;
+        wallet.balance -= amount;
 
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const pass = encrypt(document.getElementById('loginPass').value);
-            if (!users[email] || users[email].pass !== pass) return showNotification('Invalid credentials!');
-            currentUser = email;
-            localStorage.setItem('currentUser', email);
-            showNotification('Logged in successfully!');
-            showDashboard();
-        });
+        const tx = {
+            id: crypto.randomUUID(),
+            type: "sent",
+            name,
+            amount,
+            note,
+            createdAt: Date.now()
+        };
+        wallet.transactions.push(tx);
+        saveState(wallet);
+        renderAll();
 
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('currentUser');
-            document.getElementById('loginLink').style.display = 'inline';
-            document.getElementById('signupLink').style.display = 'inline';
-            document.getElementById('logoutLink').style.display = 'none';
-            showHome();
-        }
+        const msgBody =
+            `You sent ${formatMoney(amount)} to ${name} from your real account.\n` +
+            `Previous balance: ${formatMoney(oldBalance)}\n` +
+            `New balance: ${formatMoney(wallet.balance)}.`;
 
-        // Wallet Functions
-        function renderDashboard() {
-            const user = users[currentUser];
-            document.getElementById('balance').textContent = `$${user.balance.toFixed(2)}`;
-            const userTx = transactions[currentUser] || [];
-            const txList = document.getElementById('transactions');
-            txList.innerHTML = userTx.slice(-10).map(tx => `
-                <div class="transaction">
-                    <span>${tx.type === 'sent' ? 'Sent to' : 'Received from'}: ${tx.recipient} - $${tx.amount}</span>
-                    <span>${new Date(tx.date).toLocaleString()}</span>
-                </div>
-            `).join('');
-        }
+        showNotification("Money sent", msgBody.replace(/\n/g, "<br>"));
 
-        function addFunds() {
-            const amount = parseFloat(document.getElementById('addAmount').value);
-            if (!amount || amount <= 0) return showNotification('Enter valid amount!');
-            users[currentUser].balance += amount;
-            localStorage.setItem('users', JSON.stringify(users));
-            showNotification(`Added $${amount.toFixed(2)} (Mock payment success)`);
-            document.getElementById('addAmount').value = '';
-            renderDashboard();
-        }
+        // clear inputs
+        amountInput.value = "";
+        noteInput.value = "";
+        nameInput.value = "";
+    }
 
-        function sendMoney() {
-            const recipient = document.getElementById('recipientEmail').value;
-            const amount = parseFloat(document.getElementById('sendAmount').value);
-            if (!amount || amount <= 0 || !recipient) return showNotification('Enter recipient and amount!');
-            if (!users[recipient]) return showNotification('Recipient not found! (Create account first)');
-            if (users[currentUser].balance < amount) return showNotification('Insufficient balance!');
-            
-            // Transfer
-            users[currentUser].balance -= amount;
-            users[recipient].balance += amount;
-            
-            // Record tx
-            const tx = { type: 'sent', recipient, amount, date: Date.now() };
-            if (!transactions[currentUser]) transactions[currentUser] = [];
-            transactions[currentUser].push(tx);
-            const rxTx = { type: 'received', recipient: currentUser, amount, date: Date.now() };
-            if (!transactions[recipient]) transactions[recipient] = [];
-            transactions[recipient].push(rxTx);
-            
-            localStorage.setItem('users', JSON.stringify(users));
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-            
-            showNotification(`Sent $${amount.toFixed(2)} to ${recipient}`);
-            document.getElementById('recipientEmail').value = '';
-            document.getElementById('sendAmount').value = '';
-            renderDashboard();
-        }
+    // --- UX HELPERS ---
 
-        function showNotification(msg) {
-            const notif = document.getElementById('notification');
-            notif.textContent = msg;
-            notif.classList.add('show');
-            setTimeout(() => notif.classList.remove('show'), 3000);
-        }
-    </script>
+    function showNotification(title, body) {
+        const box = document.getElementById("notify");
+        document.getElementById("notifyTitle").textContent = title;
+        document.getElementById("notifyBody").innerHTML = body;
+        box.classList.add("show");
+        clearTimeout(showNotification._timer);
+        showNotification._timer = setTimeout(() => {
+            box.classList.remove("show");
+        }, 3200);
+    }
+
+    function scrollToMain() {
+        document.getElementById("mainWallet").scrollIntoView({ behavior:"smooth" });
+    }
+
+    function focusSendName() {
+        document.getElementById("mainWallet").scrollIntoView({ behavior:"smooth" });
+        setTimeout(() => document.getElementById("recipientName").focus(), 500);
+    }
+</script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
